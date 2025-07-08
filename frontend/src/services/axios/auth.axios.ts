@@ -5,38 +5,41 @@ import { apiUrl } from "../../utils/enviroment";
 
 const authUrl = `${apiUrl}/auth`;
 
-export async function registerUser(name: string, email: string, password: string) {
+export const registerUser = async (name: string, email: string, password: string): Promise<AxiosResponse<CommonResponse, string>> => {
   const url = `${authUrl}/register`;
   const body = { name, email, password };
+
   try {
-    const axiosResponse = await axios.post<CommonResponse>(url, body);
+    const axiosResponse = await axios.post(url, body);
+
     if (axiosResponse?.data.success) {
       // Confirm user
     } else {
       console.error('Register User Error: ', axiosResponse.data.error);
     }
-    return axiosResponse.status;
+    return axiosResponse;
   } catch (error) {
-    const knownError = error as AxiosResponse<CommonResponse, unknown>;
-    console.error('Login User Error: ', error);
-    return knownError.status;
+    const knownError = error as AxiosResponse<CommonResponse, string>;
+    console.error('Login User Error: ', knownError);
+    return knownError;
   }
 }
 
-export async function loginUser(email: string, password: string): Promise<number> {
-  const url = `${authUrl}/login`;
-  const body = { email, password };
+export const loginUser = async (email: string, password: string) => {
+  const url = `${authUrl}/login`
+  const body = { email, password }
+  const response = { status: 200, jwt: '' }
+
   try {
-    const axiosResponse = await axios.post<LoginResponse>(url, body);
-    if (axiosResponse?.data.success) {
-      console.log(axiosResponse.data.jwt);
-    } else {
-      console.log('Login User Error: ', axiosResponse.data.error);
-    }
-    return axiosResponse.status;
+    const axiosResponse = await axios.post<LoginResponse>(url, body)
+    if (axiosResponse?.data.success) { return { ...response, jwt: axiosResponse.data.jwt } }
+
+    console.error('Login User Error: ', axiosResponse.data.error)
+    return { ...response, status: axiosResponse.status }
   } catch (error: unknown) {
-    const knownError = error as AxiosResponse<LoginResponse, unknown>;
-    console.error('Login User Error: ', error);
-    return knownError.status;
+    const knownError = error as AxiosResponse<LoginResponse, unknown>
+
+    console.error('Login User Error: ', error)
+    return { ...response, status: knownError.status }
   }
 }

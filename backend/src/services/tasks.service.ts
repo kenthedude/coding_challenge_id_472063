@@ -20,8 +20,9 @@ export async function getTaskService(filter: GetOneTaskQuery) {
 
 export async function getTasksService(userId: string, pageSize: number, offset: number) {
   try {
-    const data = await Task.find({ userId }).skip(offset).limit(pageSize);
-    return data;
+    const totalItems = (await Task.countDocuments({ userId }));
+    const items = await Task.find({ userId }).skip(offset).limit(pageSize);
+    return { items, totalItems };
   } catch (error) {
     throw new Error('Get Tasks Service Error : ', error);
   }

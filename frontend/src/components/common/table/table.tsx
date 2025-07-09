@@ -1,3 +1,4 @@
+import Dropdown from '../dropdown/dropdown';
 import './table.css';
 
 interface TableProps<T> {
@@ -6,13 +7,19 @@ interface TableProps<T> {
   page: number;
   size: number;
   total: number;
+  handleSelect: (option: string, taskId: string) => void;
 }
 
 // eslint-disable-next-line
-const Table = <T extends Record<string, any>>({ columns, data, page, size, total }: TableProps<T>) => {
-  console.log(page)
-  console.log(size)
-  console.log(total)
+const Table = <T extends Record<string, any>>({ columns, data, page, size, total, handleSelect }: TableProps<T>) => {
+
+  const renderStringOrButton = (row: T, col: string) => {
+    if (col === 'actions') {
+      const actions: string[] = ['Edit', 'Delete'];
+      return (<Dropdown options={actions} onSelect={handleSelect} taskId={row['_id']} />)
+    }
+    return row[col]?.toString();
+  }
   return (
     <table className="table">
       <thead>
@@ -26,7 +33,9 @@ const Table = <T extends Record<string, any>>({ columns, data, page, size, total
         {data.map((row, index) => (
           <tr key={index}>
             {columns.map((col) => (
-              <td key={col}>{row[col]?.toString()}</td>
+              <td key={col}>
+                {renderStringOrButton(row, col)}
+              </td>
             ))}
           </tr>
         ))}

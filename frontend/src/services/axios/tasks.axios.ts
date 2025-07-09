@@ -6,14 +6,23 @@ import type { CommonResponse } from "../../types/common.types";
 
 const tasksUrl = `${apiUrl}/tasks`;
 
-export const getTask = async (taskId: string): Promise<AxiosResponse<GetTask, string>> => {
-  const url = `${tasksUrl}/${taskId}`;
+type StringRequest = {
+  stringRequest: string
+}
+
+type GetTaskRequest = {
+  page: number,
+  size: number
+}
+
+export const getTask = async (request: StringRequest): Promise<AxiosResponse<GetTask, string>> => {
+  const url = `${tasksUrl}/${request.stringRequest}`;
   const response = await axiosGetWithToken(url);
   return response;
 }
 
-export const getTasks = async (page: number, size: number): Promise<AxiosResponse<GetTasks, string>> => {
-  const url = `${tasksUrl}?page=${page}&size=${size}`;
+export const getTasks = async (request: GetTaskRequest): Promise<AxiosResponse<GetTasks, string>> => {
+  const url = `${tasksUrl}?page=${request.page}&size=${request.size}`;
   const response = await axiosGetWithToken(url);
   return response;
 }
@@ -29,14 +38,14 @@ export const putTask = async (taskId: string, request: EditTaskRequest) => {
   return response;
 }
 
-export const patchTask = async (taskId: string, request: EditTaskRequest) => {
-  const url = `${tasksUrl}/${taskId}`;
-  const response = await axiosPatchWithToken(url, request);
+export const patchTask = async (request: EditTaskRequest) => {
+  const url = `${tasksUrl}/${request.taskId}`;
+  const response = await axiosPatchWithToken(url, request.payload);
   return response;
 }
 
-export const deleteTask = async (taskId: string): Promise<AxiosResponse<CommonResponse, string>> => {
-  const url = `${tasksUrl}/${taskId}`;
+export const deleteTask = async (request: StringRequest): Promise<AxiosResponse<CommonResponse, string>> => {
+  const url = `${tasksUrl}/${request.stringRequest}`;
   const response = await axiosDeleteWithToken(url);
   return response;
 }

@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Table from '../common/table/table';
 import DeleteModal from './delete-modal/delete-modal';
-import type { Task } from '../../types/tasks.types';
-import { getTasks } from '../../services/axios/tasks.axios';
+import CreateModal from './create-modal/create-modal';
+import EditModal from './edit-modal/edit-modal';
+import useFetchTasks from '../../hooks/useFetchTasks';
+import './tasks.css';
 
 const Tasks: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [fetchError, setFetchError] = useState<string>('');
-  const [totalTasks, setTotalTasks] = useState<number>(0);
-  const [selectedTaskId, setSelectedTaskId] = useState<string>('');
+  const [selectedTaskIndex, setSelectedTaskIndex] = useState<number>(0);
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
+  const [isOpenCreateModal, setIsOpenCreateModal] = useState<boolean>(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
+  const { tasks, totalTasks, error, loading, fetchTasks } = useFetchTasks(page, size);
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const headers = ['title', 'description', 'completed', 'priority', 'dueDate', 'userId', 'createdAt', 'updatedAt', 'actions'];
+  const headers = ['title', 'description', 'completed', 'priority', 'dueDate', 'createdAt', 'updatedAt', 'actions'];
 
-  useEffect(() => { fetchTasks(); }, []);
-
-  const handleSelect = (option: string, taskId: string) => {
-    setSelectedTaskId(taskId);
+  const handleSelect = (option: string, taskIndex: number) => {
+    setSelectedTaskIndex(taskIndex);
     if (option === 'Edit') {
       setIsOpenEditModal(true);
       return;
@@ -28,38 +26,38 @@ const Tasks: React.FC = () => {
     setIsOpenDeleteModal(true);
   };
 
-  const closeDeleteModal = () => setIsOpenDeleteModal(false);
-
-  const fetchTasks = async () => {
-    try {
-      const response = await getTasks(page, size);
-      if (response.status === 200) {
-        setTasks(response.data.data.items);
-        setTotalTasks(response.data.data.totalItems);
-      }
-    } catch (error) {
-      console.error('Server error:', error);
-      setFetchError('There was a problem loading your tasks, please try again later by reloading the page');
-    } finally {
-      setLoading(false);
-    }
-  }
-
   if (loading) {
     return <div>Loading...</div>
   }
 
-  if (fetchError) {
-    return <div>{fetchError}</div>
+  if (error) {
+    return <div>{error}</div>
   }
 
   return (
     <div>
+      <button
+        className='create-task-btn'
+        onClick={() => setIsOpenCreateModal(true)}
+      >
+        CreateModal
+      </button>
+      <CreateModal
+        isOpen={isOpenCreateModal}
+        closeModal={() => setIsOpenCreateModal(false)}
+        fetchTasks={fetchTasks}
+      />
       <DeleteModal
         isOpen={isOpenDeleteModal}
-        taskId={selectedTaskId}
-        closeModal={closeDeleteModal}
+        taskId={tasks[selectedTaskIndex]?._id || ''}
+        closeModal={() => setIsOpenDeleteModal(false)}
         refreshTasks={fetchTasks}
+      />
+      <EditModal
+        isOpen={isOpenEditModal}
+        data={tasks[selectedTaskIndex] || []}
+        closeModal={() => setIsOpenEditModal(false)}
+        fetchTasks={fetchTasks}
       />
       <Table
         columns={headers}

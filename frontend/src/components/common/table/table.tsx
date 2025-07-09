@@ -7,16 +7,16 @@ interface TableProps<T> {
   page: number;
   size: number;
   total: number;
-  handleSelect: (option: string, taskId: string) => void;
+  handleSelect: (option: string, taskIndex: number) => void;
 }
 
 // eslint-disable-next-line
 const Table = <T extends Record<string, any>>({ columns, data, page, size, total, handleSelect }: TableProps<T>) => {
 
-  const renderStringOrButton = (row: T, col: string) => {
+  const renderStringOrButton = (row: T, col: string, index: number) => {
     if (col === 'actions') {
       const actions: string[] = ['Edit', 'Delete'];
-      return (<Dropdown options={actions} onSelect={handleSelect} taskId={row['_id']} />)
+      return (<Dropdown options={actions} onSelect={handleSelect} taskIndex={index} />)
     }
     return row[col]?.toString();
   }
@@ -34,7 +34,7 @@ const Table = <T extends Record<string, any>>({ columns, data, page, size, total
           <tr key={index}>
             {columns.map((col) => (
               <td key={col}>
-                {renderStringOrButton(row, col)}
+                {renderStringOrButton(row, col, index)}
               </td>
             ))}
           </tr>

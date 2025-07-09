@@ -12,7 +12,7 @@ interface RegisterModalProps {
 const DeleteModal: React.FC<RegisterModalProps> = ({ isOpen, closeModal, taskId, refreshTasks }) => {
   const deleteSelectedTask = async () => {
     try {
-      const response = await deleteTask(taskId);
+      const response = await deleteTask({ stringRequest: taskId });
       if (response.status === 200 && response.data.success) {
         refreshTasks();
         closeModal();

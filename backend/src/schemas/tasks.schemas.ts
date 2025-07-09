@@ -4,7 +4,7 @@ export const AddTaskSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   priority: z.union([z.literal('low'), z.literal('medium'), z.literal('high')]),
-  dueDate: z.date().optional(),
+  dueDate: z.string().optional(),
 });
 
 export const PutTaskSchema = z.object({
@@ -12,7 +12,7 @@ export const PutTaskSchema = z.object({
   description: z.string().optional(),
   priority: z.union([z.literal('low'), z.literal('medium'), z.literal('high')]),
   completed: z.boolean(),
-  dueDate: z.date().optional(),
+  dueDate: z.string().optional(),
 });
 
 export const PatchTaskSchema = z.object({
@@ -20,5 +20,5 @@ export const PatchTaskSchema = z.object({
   description: z.string().optional(),
   priority: z.union([z.literal('low'), z.literal('medium'), z.literal('high')]).optional(),
   completed: z.boolean().optional(),
-  dueDate: z.date().optional(),
+  dueDate: z.string().optional(),
 })

@@ -42,7 +42,7 @@ const LoginForm: React.FC = () => {
       return;
     }
 
-    const response = await loginUser(formData.email, formData.password);
+    const response = await loginUser({ email: formData.email, password: formData.password });
 
     if (response.status === 200) {
       const jwt = response.jwt as string;

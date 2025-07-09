@@ -1,36 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import './dropdown.css';
+import useDropdownHandler from '../../../hooks/useDropdownHandler';
 
 interface DropdownProps {
-  taskId: string;
+  taskIndex: number;
   options: string[];
-  onSelect: (option: string, taskId: string) => void;
+  onSelect: (option: string, taskIndex: number) => void;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, taskId }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleOptionClick = (option: string, taskId: string) => {
-    onSelect(option, taskId);
-    setIsOpen(false);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, taskIndex }) => {
+  const { isOpen, handleOptionClick, toggleDropdown, dropdownRef } = useDropdownHandler(onSelect);
 
   return (
     <div className="dropdown" ref={dropdownRef}>
@@ -43,7 +22,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, taskId }) => {
             <li
               key={index}
               className="dropdown-item"
-              onClick={() => handleOptionClick(option, taskId)}
+              onClick={() => handleOptionClick(option, taskIndex)}
             >
               {option}
             </li>

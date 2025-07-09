@@ -5,12 +5,22 @@ import { apiUrl } from "../../utils/enviroment";
 
 const authUrl = `${apiUrl}/auth`;
 
-export const registerUser = async (name: string, email: string, password: string): Promise<AxiosResponse<CommonResponse, string>> => {
+type RegisterUserRequest = {
+  name: string,
+  email: string,
+  password: string
+}
+
+type LoginUserRequest = {
+  email: string,
+  password: string
+}
+
+export const registerUser = async (request: RegisterUserRequest): Promise<AxiosResponse<CommonResponse, string>> => {
   const url = `${authUrl}/register`;
-  const body = { name, email, password };
 
   try {
-    const axiosResponse = await axios.post(url, body);
+    const axiosResponse = await axios.post(url, request);
 
     if (axiosResponse?.data.success) {
       // Confirm user
@@ -25,13 +35,12 @@ export const registerUser = async (name: string, email: string, password: string
   }
 }
 
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = async (request: LoginUserRequest) => {
   const url = `${authUrl}/login`
-  const body = { email, password }
   const response = { status: 200, jwt: '' }
 
   try {
-    const axiosResponse = await axios.post<LoginResponse>(url, body)
+    const axiosResponse = await axios.post<LoginResponse>(url, request)
     if (axiosResponse?.data.success) { return { ...response, jwt: axiosResponse.data.jwt } }
 
     console.error('Login User Error: ', axiosResponse.data.error)

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './register-modal.css';
 import { registerUser } from '../../../../services/axios/auth.axios';
-import type { CommonResponse } from '../../../../types/common.types';
-import type { AxiosResponse } from 'axios';
+import useModalHandler from '../../../../hooks/useModalHandler';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -10,36 +9,12 @@ interface RegisterModalProps {
 }
 
 const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, closeModal }) => {
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
-  const [error, setError] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.username || !formData.email || !formData.password) {
-      setError('All fields are required.');
-      return;
-    }
-
-    try {
-      const response = await registerUser(formData.username, formData.email, formData.password);
-      if (response.status === 200 && response.data.success) {
-        closeModal();
-      } else {
-        const errorMessage = response.status === 400 ? 'Duplicated email found' : 'Server error';
-        setError(errorMessage);
-        console.error('Server error:', error);
-      }
-    } catch (error) {
-      const knownError = error as AxiosResponse<CommonResponse, string>;
-      const errorMessage = knownError.status === 400 ? 'Duplicated email found' : 'Server error';
-      setError(errorMessage);
-      console.error('Server error:', error);
-    }
-  };
+  const data = {
+    username: '',
+    email: '',
+    password: ''
+  }
+  const { formData, error, handleSubmit, handleChange } = useModalHandler(closeModal, data, registerUser);
 
   return (
     isOpen ? (

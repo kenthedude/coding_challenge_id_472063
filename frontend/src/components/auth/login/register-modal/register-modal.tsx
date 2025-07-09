@@ -27,7 +27,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, closeModal }) => 
             <input
               type="text"
               name="username"
-              value={formData.username}
+              value={formData.username.toString()}
               onChange={handleChange}
               placeholder="Enter your username"
             />
@@ -35,7 +35,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, closeModal }) => 
             <input
               type="email"
               name="email"
-              value={formData.email}
+              value={formData.email.toString()}
               onChange={handleChange}
               placeholder="Enter your email"
             />
@@ -43,7 +43,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, closeModal }) => 
             <input
               type="password"
               name="password"
-              value={formData.password}
+              value={formData.password.toString()}
               onChange={handleChange}
               placeholder="Enter your password"
             />

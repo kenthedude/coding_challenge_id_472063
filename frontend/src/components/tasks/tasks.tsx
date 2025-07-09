@@ -55,7 +55,7 @@ const Tasks: React.FC = () => {
       />
       <EditModal
         isOpen={isOpenEditModal}
-        data={tasks[selectedTaskIndex] || []}
+        data={tasks[selectedTaskIndex]}
         closeModal={() => setIsOpenEditModal(false)}
         fetchTasks={fetchTasks}
       />

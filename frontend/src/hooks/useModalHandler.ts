@@ -4,15 +4,24 @@ import type { CommonResponse } from "../types/common.types";
 
 export default function useModalHandler(
   closeModal: () => void,
-  params: { [key: string]: string },
+  params: { [key: string]: string | boolean },
   axiosCall: (request: any) => Promise<AxiosResponse<CommonResponse, string>>, // eslint-disable-line
   fetchTasks?: () => void
 ) {
   const [formData, setFormData] = useState({ ...params });
   const [error, setError] = useState('');
 
+  const handleChangeInParams = (params: any) => { // eslint-disable-line
+    setFormData({ ...params });
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleBooleanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const toggleValue = !formData[e.target.name];
+    setFormData({ ...formData, [e.target.name]: toggleValue });
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +54,6 @@ export default function useModalHandler(
     }
   };
 
-  return { formData, error, handleChange, handleDateChange, handleSelectChange, handleSubmit }
+  return { formData, error, handleChange, handleDateChange, handleSelectChange, handleSubmit, handleBooleanChange, handleChangeInParams }
 }
 

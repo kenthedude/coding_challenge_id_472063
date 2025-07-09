@@ -33,12 +33,10 @@ export interface PostTaskRequest {
 }
 
 export interface EditTaskRequest {
-  taskId: string,
-  payload: {
-    title: string;
-    description: string;
-    completed: boolean;
-    priority: 'low' | 'medium' | 'high';
-    dueDate?: Date;
-  }
+  _id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  priority: 'low' | 'medium' | 'high';
+  dueDate?: Date;
 }

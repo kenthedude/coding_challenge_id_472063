@@ -32,15 +32,15 @@ export const postTask = async (request: PostTaskRequest) => {
   return response;
 }
 
-export const putTask = async (taskId: string, request: EditTaskRequest) => {
-  const url = `${tasksUrl}/${taskId}`;
+export const putTask = async (request: EditTaskRequest): Promise<AxiosResponse<CommonResponse, string>> => {
+  const url = `${tasksUrl}/${request._id}`;
   const response = await axiosPutWithToken(url, request);
   return response;
 }
 
-export const patchTask = async (request: EditTaskRequest) => {
-  const url = `${tasksUrl}/${request.taskId}`;
-  const response = await axiosPatchWithToken(url, request.payload);
+export const patchTask = async (request: EditTaskRequest): Promise<AxiosResponse<CommonResponse, string>> => {
+  const url = `${tasksUrl}/${request._id}`;
+  const response = await axiosPatchWithToken(url, request);
   return response;
 }
 

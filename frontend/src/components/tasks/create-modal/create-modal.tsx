@@ -36,7 +36,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, closeModal, fetchTask
             <input
               type="text"
               name="title"
-              value={formData.title}
+              value={formData.title.toString()}
               onChange={handleChange}
               placeholder={'Write your title here'}
             />
@@ -44,7 +44,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, closeModal, fetchTask
             <input
               type="text"
               name="description"
-              value={formData.description}
+              value={formData.description.toString()}
               onChange={handleChange}
               placeholder={'You can write an optional placeholder here'}
             />
@@ -52,7 +52,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, closeModal, fetchTask
             <select
               name="priority"
               id="priority"
-              value={formData.priority}
+              value={formData.priority.toString()}
               onChange={handleSelectChange}
             >
               <option value="low">Low</option>
@@ -63,7 +63,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, closeModal, fetchTask
             <input
               type="date"
               name="dueDate"
-              value={formData.dueDate.split('T')[0]}
+              value={formData.dueDate.toString().split('T')[0]}
               onChange={handleDateChange}
             />
             <button className="submit-btn" type="submit">Save Changes</button>
